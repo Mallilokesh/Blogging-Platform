@@ -106,6 +106,7 @@ const Login = () => {
                         
                         <Typography style={{ fontSize: 13, color: '#8e8e8e' }}>OR</Typography>
                         <Typography style={{ color: '#385185', fontSize: 14, margin: 20, fontWeight: 600 }}>Log in with Facebook</Typography>
+                        <Typography style={{ color: '#385185', fontSize: 14, margin: 20, fontWeight: 600 }}>Log in with Google</Typography>
                         <Typography style={{ color: '#00376b', fontSize: 12, marginBottom: 20 }}>Forgot Password?</Typography>
                     </AccountBox>
                     <AccountBox>
