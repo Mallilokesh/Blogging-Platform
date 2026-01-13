@@ -1,66 +1,40 @@
 import axios from 'axios';
-
 import { API_URL } from '../constants/route';
 
+// Create axios instance with base config
+const apiClient = axios.create({
+  baseURL: API_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const signupUser = async (data) => {
-    try {
-        return await axios.post(`${API_URL}/signup`, data);
-    } catch (error) {
-        console.log('Error while calling signup User API ', error);
-        return error.response;
-    }
-}
+// Generic API handler to reduce code duplication
+const handleApiCall = async (method, endpoint, data = null) => {
+  try {
+    const config = { method, url: endpoint };
+    if (data) config.data = data;
+    
+    const response = await apiClient(config);
+    return response.data;
+  } catch (error) {
+    console.error(`API Error [${method.toUpperCase()} ${endpoint}]:`, error.message);
+    return error.response?.data || { error: 'An error occurred' };
+  }
+};
 
-export const loginUser = async (data) => {
-    try {
-        return await axios.post(`${API_URL}/login`, data);
-    } catch (error) {
-        console.log('Error while calling login User API ', error);
-        return error.response;
-    }
-}
+// Auth endpoints
+export const signupUser = (data) => handleApiCall('post', '/signup', data);
+export const loginUser = (data) => handleApiCall('post', '/login', data);
+export const followUser = (data) => handleApiCall('post', '/follow', data);
 
-export const getAllUsers = async () => {
-    try {
-        return await axios.get(`${API_URL}/users`);
-    } catch (error) {
-        console.log('Error while calling getAllUsers API ', error);
-        return error.response;
-    }
-}
+// User endpoints
+export const getAllUsers = () => handleApiCall('get', '/users');
+export const getUserByUsername = (data) => handleApiCall('post', '/user', data);
 
-export const getUserByUsername = async (data) => {
-    try {
-        let user = await axios.post(`${API_URL}/user`, data);
-        return user.data;
-    } catch (error) {
-        console.log('Error while calling  getUser API ', error);
-        return error.response;
-    }
-}
+// File endpoints
+export const uploadFile = (data) => handleApiCall('post', '/file/upload', data);
 
-export const followUser = async (data) => {
-    try {
-        return await axios.post(`${API_URL}/follow`, data);
-    } catch (error) {
-        console.log('Error while calling login User API ', error);
-        return error.response;
-    }
-}
-
-export const uploadFile = async (data) => {
-    try {
-        return await axios.post(`${API_URL}/file/upload`, data);
-    } catch (error) {
-        console.log('Error while calling uploadFile API ', error);
-    }
-}
-
-export const savePost = async (data) => {
-    try {
-        return await axios.post(`${API_URL}/post/save`, data);
-    } catch (error) {
-        console.log('Error while calling savePost API ', error);
-    }
-}
+// Post endpoints
+export const savePost = (data) => handleApiCall('post', '/post/save', data);
